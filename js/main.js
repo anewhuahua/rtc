@@ -34,9 +34,9 @@ var sdpConstraints = {'mandatory': {
 /////////////////////////////////////////////
 
 var room = location.pathname.substring(1);
+var room = window.location.href.split('#')[1];
 if (room === '') {
-  room = prompt('Enter room name:');
-//  room = 'foo';
+   alert("illegal room");
 } else {
   //
 }

@@ -7,7 +7,7 @@ var app = http.createServer(function (req, res) {
 
 
 var io = require('socket.io').listen(app);
-var numClients = 'undefined';
+var numClients = {};
 
 
 io.sockets.on('connection', function (socket){
@@ -31,17 +31,19 @@ io.sockets.on('connection', function (socket){
 		log('Room ' + room + ' has ' + numClients + ' client(s)');
 		log('Request to create or join room', room);
 
-		if (numClients == 'undefined'){
-                	numClients=1;
+		if (numClients[room]==null){
+			console.log('create '+room);
+                	numClients[room]=1;
 			socket.join(room);
 			socket.emit('created', room);
-		} else if (numClients == 1) {
-                	numClients+=1;
+		} else if (numClients[room] == 1) {
+			console.log('join '+room);
 			io.sockets.in(room).emit('join', room);
 			socket.join(room);
 			socket.emit('joined', room);
 		} else { // max two clients
 			socket.emit('full', room);
+			console.log('full '+room);
 		}
 		socket.emit('emit(): client ' + socket.id + ' joined room ' + room);
 		socket.broadcast.emit('broadcast(): client ' + socket.id + ' joined room ' + room);
